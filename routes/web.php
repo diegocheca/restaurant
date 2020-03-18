@@ -14,3 +14,55 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/tu-hermana', function () {
+    return 'tu hermana es puta';
+});
+
+Route::post('/tu-hermana', function () {
+    return 'tu hermana es una puta en 4';
+});
+
+
+Route::get('/prueba_vue', 'PruebaVueController@inicio_vue');
+
+//pdf
+Route::name('print')->get('/imprimir', 'PruebaVueController@imprimir');
+
+
+
+//tickets
+Route::get('/tickets_crear', 'PruebaVueController@crear_ticket');
+Route::get('/tickets_ver', 'TicketsController@get');
+
+
+//comanda
+
+Route::get('/ver_comanda', 'TicketsController@comanda_ver');
+Route::get('/ver_comanda_index', 'TicketsController@comanda_index_componente');
+
+
+//productos
+Route::get('/productos_get_todos', 'ProductoController@get');
+
+
+//JWT
+Route::post('register', 'UserController@register');
+Route::post('login', 'UserController@authenticate');
+
+Route::group(['middleware' => ['jwt.verify']], function() {
+       /*AÑADE AQUI LAS RUTAS QUE QUIERAS PROTEGER CON JWT*/
+ });
+
+
+
+//iconos
+
+Route::get('/ver_iconos', 'TicketsController@iconos_ver');
+
+
+//VOYAGER
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
