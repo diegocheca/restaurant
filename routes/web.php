@@ -37,6 +37,12 @@ Route::get('/tickets_crear', 'PruebaVueController@crear_ticket');
 Route::get('/tickets_ver', 'TicketsController@get');
 
 
+//clientes
+
+Route::get('/clientes_get_ticket_todos', 'ClienteController@get_clientes_ticket');
+
+
+
 //comanda
 
 Route::get('/ver_comanda', 'TicketsController@comanda_ver');

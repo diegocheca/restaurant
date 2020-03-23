@@ -22,6 +22,9 @@ Vue.component('ticket-cancelados', require('./components/TicketCanceladosCompone
 Vue.component('card-producto-ticket', require('./components/CardProductoTicketComponent.vue').default);
 Vue.component('card-info-ticket', require('./components/CardInfoTicketComponent.vue').default);
 
+Vue.component('buscador-cliente', require('./components/BuscadorClienteComponent.vue').default);
+
+
 
 const app = new Vue({
     el: '#app',

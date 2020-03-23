@@ -2,13 +2,30 @@
   <div class='row'>
     <h1>Crear un nuevo ticket</h1>
     <form action="#" @submit.prevent="">
-      <div class="input-group">
+
+      <buscador-cliente  v-on:cambio_cliente_emit="refrescar_cliente_id($event)"></buscador-cliente>
+      <!-- <div class="input-group">
         <label>Nombre del cliente</label>
-        <input v-model="ticket.cliente" type="text" name="cliente" class="form-control" >
-        <p>cantdad_de_productos : {{cantdad_de_productos_global}}</p>
+        <v-select  
+                  transition="" 
+                  :options="ListaDeClientes" 
+                  label="apellido"
+                  @input="cambiocliente" 
+                  class="form-control" 
+                  v-model="ticket.cliente"
+                  item-value="id"
+                  >
+                    <template slot="option" slot-scope="option">
+                       <img v-bind:src="'http://localhost:8000/storage/' + option.avatar" width="40px" height="40px" /> 
+                        {{ option.apellido +" , " + option.nombre}}
+                    </template>
+                </v-select>
+
+      </div> -->
+
+        <p>cliente: {{cliente_elegido}} cantdad_de_productos : {{cantdad_de_productos_global}}</p>
         <button class="btn btn-success" v-on:click="agregar_producto">Nuevo Producto</button>
         <button class="btn btn-danger" v-on:click="eliminar_todos_productos">Limpar Orden</button>
-      </div>
       <div class="card-deck">
           <div class="card" v-for="(producto,index) in productos_vendiendo" :key="producto.id">
             <img class="card-img-top" v-bind:src="'http://localhost:8000/storage/' + producto.icono" alt="Card image cap" height="240px">
@@ -88,6 +105,7 @@ import vSelect from 'vue-select'
 import axios from 'axios'
 
 Vue.component('v-select', vSelect)
+Vue.component('buscador-cliente', require('./BuscadorClienteComponent.vue'));
 import 'vue-select/dist/vue-select.css';
 
 //voy a tneer q crear un nuevo controller de productos donde adentro pueda poner las funciones q entreguen los datos en 
@@ -221,6 +239,7 @@ import 'vue-select/dist/vue-select.css';
                   }
                 ],
                 list: [],
+                cliente_elegido: '',
                 task: {
                     id: '',
                     body: ''
@@ -267,6 +286,7 @@ import 'vue-select/dist/vue-select.css';
         
         created() {
             this.fetchProductosList();
+            //this.fetchClientesList();
         },
         
         methods: {
@@ -376,6 +396,10 @@ import 'vue-select/dist/vue-select.css';
                     this.list = res.data;
                 });
             },
+            
+            
+            
+
             cambioproducto(orden) {
               //alert("se cambio el producto numero:"+orden+ " y se elegio el producto:"+this.productos_vendiendo[orden-1].producto_select.nombre );
               console.log(this.productos_vendiendo[orden-1].producto_select.nombre );
@@ -390,7 +414,14 @@ import 'vue-select/dist/vue-select.css';
               this.productos_vendiendo[orden-1].precio_total = parseFloat(this.productos_vendiendo[orden-1].producto_select.precio);
               console.log("Itotal:"+this.productos_vendiendo[orden-1].producto_select.total );
               this.productos_vendiendo[orden-1].icono = this.productos_vendiendo[orden-1].producto_select.icono;
-            }
+            },
+            refrescar_cliente_id(id){
+              console.log("recibi el id del cliente cambiado como:"+id);
+              this.cliente_elegido= id;
+
+            },
+            
+         
             /*
  
             createTask() {
