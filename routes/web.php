@@ -40,6 +40,7 @@ Route::get('/tickets_ver', 'TicketsController@get');
 //clientes
 
 Route::get('/clientes_get_ticket_todos', 'ClienteController@get_clientes_ticket');
+Route::get('/clientes_get_todos_los_datos/{id}', 'ClienteController@get_cliente_todos_los_datos');
 
 
 

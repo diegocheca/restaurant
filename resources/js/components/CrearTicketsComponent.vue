@@ -84,7 +84,8 @@
       </div>
       <label>Precio total de todo:</label>
       <input type="number" step="0.001" name="totaltoal"  v-model="total">
-      <button type="submit" class="btn btn-success">Crear Orden</button>
+      <button type="submit" class="btn btn-success" v-on:click="crear_orden">Crear Orden</button> 
+      <button @click="mostrar('algo123')">toastr</button>
     </form>
     <!--<ul class="list-group">
         <li v-if='list.length === 0'>There are no tasks yet!</li>
@@ -100,20 +101,21 @@
 </template>
 
 <script>
-//import Vue from 'vue'
-import vSelect from 'vue-select'
-import axios from 'axios'
+  //import Vue from 'vue'
+  import vSelect from 'vue-select'
+  import axios from 'axios'
+  import moment from 'moment'
+  import toastr from 'toastr'
 
-Vue.component('v-select', vSelect)
-Vue.component('buscador-cliente', require('./BuscadorClienteComponent.vue'));
-import 'vue-select/dist/vue-select.css';
+  Vue.component('v-select', vSelect)
+  Vue.component('buscador-cliente', require('./BuscadorClienteComponent.vue'));
+  import 'vue-select/dist/vue-select.css';
 
 //voy a tneer q crear un nuevo controller de productos donde adentro pueda poner las funciones q entreguen los datos en 
 //json desde la bd a vuejs
     export default {
         data() {
             return {
-                select_uno: '',
                 cantdad_de_productos_global:2,
                 valor_select: '',
                 options: [
@@ -250,20 +252,21 @@ import 'vue-select/dist/vue-select.css';
                 },
                 picked:'',
                 productos_cargados: [],
-                productos_vendiendo: [
-                {
-                    id:1,
-                    orden: 1,
-                    nombre:'algo',
-                    precio_unitario:'58.36',
-                    cantidad:'5',
-                    precio_total:'291.8',
-                    picked:'',
-                    producto_select: '',
-                    icono: '',
-                    agregados:[]
-                },
-                {
+                productos_vendiendo: 
+                [
+                  {
+                      id:1,
+                      orden: 1,
+                      nombre:'algo',
+                      precio_unitario:'58.36',
+                      cantidad:'5',
+                      precio_total:'291.8',
+                      picked:'',
+                      producto_select: '',
+                      icono: '',
+                      agregados:[]
+                  },
+                  {
                     id:88888,
                     orden: 2,
                     nombre:'lomito',
@@ -274,13 +277,9 @@ import 'vue-select/dist/vue-select.css';
                     producto_select: '',
                     icono: '',
                     agregados:[]
-                }
+                  }
                 ],
-                total: 0,
-                category: 'Travel',
-                image: 'https://source.unsplash.com/JuR8sxg9aYo',
-                author: 'Already Programmer',
-                desc: `Indonesia with many culture`
+                total: 0
             };
         },
         
@@ -368,7 +367,7 @@ import 'vue-select/dist/vue-select.css';
                 this.calcular_precio_total_venta();
             },
             eliminar_producto(orden){
-                this.productos_vendiendo.splice(orden, 1);
+                this.productos_vendiendo.splice(orden-1, 1);
                 this.cantdad_de_productos_global--;
                 this.reordenar_ids();
                 this.calcular_precio_total_venta();
@@ -396,6 +395,9 @@ import 'vue-select/dist/vue-select.css';
                     this.list = res.data;
                 });
             },
+            mostrar: function(msg){
+              toastr.success("nuevo algo");
+            },
             
             
             
@@ -417,7 +419,7 @@ import 'vue-select/dist/vue-select.css';
             },
             refrescar_cliente_id(id){
               console.log("recibi el id del cliente cambiado como:"+id);
-              this.cliente_elegido= id;
+              this.cliente_elegido = id;
 
             },
             
@@ -441,7 +443,32 @@ import 'vue-select/dist/vue-select.css';
                     })
                     .catch((err) => console.error(err));
             },*/
+             crear_orden() {
+              var ticketts_api= 
+              {
+                "id" : null,
+                "categoria": 1,
+                "precio_total": this.total,
+                "creado_por": 1,
+                "cliente_id": this.cliente_elegido,
+                "productos": this.productos_vendiendo
+              };
+                axios.post('api/ticket', ticketts_api)
+                    .then((res) => {
+                        console.log(res);
+                    })
+                    .catch((err) => console.error(err));
+            },
+
         },
+       /* crear_orden() {
+              //alert("se cambio el producto numero:"+orden+ " y se elegio el producto:"+this.productos_vendiendo[orden-1].producto_select.nombre );
+              console.log(this.productos_vendiendo[orden-1].producto_select.nombre );
+            },*/
+
+           
+
+
         watch:{
           'producto_select'  : function (val, oldval) {
               console.log(val);

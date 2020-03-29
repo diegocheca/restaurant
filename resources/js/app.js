@@ -24,6 +24,9 @@ Vue.component('card-info-ticket', require('./components/CardInfoTicketComponent.
 
 Vue.component('buscador-cliente', require('./components/BuscadorClienteComponent.vue').default);
 
+Vue.component('crear-cliente', require('./components/CrearClienteComponent.vue').default);
+
+
 
 
 const app = new Vue({

@@ -24,6 +24,13 @@ Route::post('ticket', 'TicketsController@store');
 Route::get('ticket', 'TicketsController@get');
 Route::delete('ticket/{id}', 'TicketsController@delete');
 
+//ROUTE'S PARA consumir desde vue - CLIENTE//
+Route::get('/cliente', 'TaskController@index');
+Route::put('/cliente/actualizar', 'TaskController@update');
+Route::post('cliente', 'ClienteController@store');
+Route::delete('/cliente/borrar/{id}', 'TaskController@destroy');
+Route::get('/cliente/buscar', 'TaskController@show');
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

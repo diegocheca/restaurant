@@ -17,7 +17,7 @@
 
    </head>
 <body>
-	<div class="container" id='app'>
+	<div  id='app' style="margin-left: 0px; margin-right: 0px; width: 1900px" >
 		<crear-ticekts></crear-ticekts>
 	</div>				
 
