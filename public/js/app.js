@@ -2102,6 +2102,34 @@ Vue.component('crear-cliente', __webpack_require__(/*! ./CrearClienteComponent.v
         _this2.todos_los_datos = res.data;
       });
       this.mas_info = false;
+    },
+    cambiocliente_desde_crear: function cambiocliente_desde_crear(cliente_nuevo_desde_hijo) {
+      //alert("cambio el cliente");
+      //pushear el nuevo cliente a la lista de clientes existentes
+      //ListaDeClientes
+      //lista de elementos que tiene lista de clientes
+      //('id','apellido','nombre','telefono1','direccion1','ciudad1','numerodireccion1','orientacion1','dni','cantidad_compras','avatar','afavor','deuda')->get();
+      //cliente_nuevo_desde_hijo
+      var cliente_nuevo_reducido = {
+        'id': cliente_nuevo_desde_hijo.id,
+        'apellido': cliente_nuevo_desde_hijo.apellido,
+        'nombre': cliente_nuevo_desde_hijo.nombre,
+        'telefono1': cliente_nuevo_desde_hijo.telefono1,
+        'direccion1': cliente_nuevo_desde_hijo.direccion1,
+        'ciudad1': cliente_nuevo_desde_hijo.ciudad1,
+        'numerodireccion1': cliente_nuevo_desde_hijo.numerodireccion1,
+        'orientacion1': cliente_nuevo_desde_hijo.orientacion1,
+        'dni': cliente_nuevo_desde_hijo.dni,
+        'cantidad_compras': cliente_nuevo_desde_hijo.cantidad_compras,
+        'avatar': cliente_nuevo_desde_hijo.avatar,
+        'afavor': cliente_nuevo_desde_hijo.afavor,
+        'deuda': cliente_nuevo_desde_hijo.deuda
+      };
+      this.ListaDeClientes.push(cliente_nuevo_reducido); //seleccionar el cliente agregado
+
+      this.cliente = cliente_nuevo_reducido; //llamo a la funcion del padre
+
+      this.$emit('cambio_cliente_emit', cliente_nuevo_desde_hijo.id);
     }
   }
 });
@@ -2117,6 +2145,10 @@ Vue.component('crear-cliente', __webpack_require__(/*! ./CrearClienteComponent.v
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -2132,12 +2164,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
+moment__WEBPACK_IMPORTED_MODULE_0___default.a.lang('es');
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "card-info-ticket",
   props: {
     mensaje: String,
     messa: String,
     colordeldiv: String,
+    fechacreacion: String,
     id: Number
   },
   data: function data() {
@@ -2146,19 +2182,25 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    since: function since(d) {
+      return moment__WEBPACK_IMPORTED_MODULE_0___default()(d).fromNow();
+    },
     terminar_ticket: function terminar_ticket(id) {
       //alert("---------");
+      toastr__WEBPACK_IMPORTED_MODULE_1___default.a.success("Ticket: " + id + " terminado");
       this.colordeldiv = 'green';
       this.$emit('speak', id);
     },
-    enproceso_ticket: function enproceso_ticket() {
+    enproceso_ticket: function enproceso_ticket(id) {
       //alert("---------");
+      toastr__WEBPACK_IMPORTED_MODULE_1___default.a.info("Ticket: " + id + " en proceso");
       this.colordeldiv = 'blue';
       this.$emit('speak', 'este mens11je');
     },
-    cancelar_ticket: function cancelar_ticket() {
+    cancelar_ticket: function cancelar_ticket(id) {
       //alert("---------");
       this.colordeldiv = 'red';
+      toastr__WEBPACK_IMPORTED_MODULE_1___default.a.error("Ticket: " + id + " cancelada");
       this.$emit('speak', 'este mens3332aje');
     }
   }
@@ -2274,20 +2316,7 @@ moment__WEBPACK_IMPORTED_MODULE_0___default.a.lang('es');
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      mens: "HOLA desde vue",
-      tickets: [{
-        id: 1,
-        nombre: "dasd"
-      }, {
-        id: 2,
-        nombre: "dasd"
-      }, {
-        id: 3,
-        nombre: "dasd"
-      }, {
-        id: 4,
-        nombre: "dasd"
-      }]
+      mens: "HOLA desde vue"
     };
   },
   methods: {
@@ -2298,7 +2327,8 @@ moment__WEBPACK_IMPORTED_MODULE_0___default.a.lang('es');
       toastr__WEBPACK_IMPORTED_MODULE_1___default.a.success("nuevo algo");
     },
     mensaje_termina_ticket: function mensaje_termina_ticket(id) {
-      toastr__WEBPACK_IMPORTED_MODULE_1___default.a.success("Ticket: " + id + " terminado");
+      //toastr.success("Ticket: "+id+" terminado");
+      console.log("Ticket: " + id + " terminado");
     }
   }
 });
@@ -2678,9 +2708,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "crear-cliente",
+  props: {
+    id_cliente_padre: Number
+  },
   data: function data() {
     return {
       mostrar_direccion2: false,
@@ -2758,6 +2792,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('api/cliente', ticketts_api).then(function (res) {
         console.log(res);
         _this.cliente_recien_creado = res.data;
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.info("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado");
+
+        _this.enviar_datos_a_padre_cliente();
       })["catch"](function (err) {
         return console.error(err);
       });
@@ -2781,7 +2818,6 @@ __webpack_require__.r(__webpack_exports__);
       };
       	*/
       toastr__WEBPACK_IMPORTED_MODULE_0___default.a.info("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado");
-      this.$root('bv::hide::modal', this.exampleModalCenter);
       /*toastr["info"]("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado", {
                "closeButton": true,
                "debug": true,
@@ -2799,6 +2835,10 @@ __webpack_require__.r(__webpack_exports__);
                "showMethod": "fadeIn",
                "hideMethod": "fadeOut"
              });*/
+    },
+    enviar_datos_a_padre_cliente: function enviar_datos_a_padre_cliente() {
+      //this.cliente_recien_creado
+      this.$emit('secreounnuevocliente', this.cliente_recien_creado);
     }
   }
 });
@@ -3223,6 +3263,23 @@ Vue.component('buscador-cliente', __webpack_require__(/*! ./BuscadorClienteCompo
       };
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('api/ticket', ticketts_api).then(function (res) {
         console.log(res);
+        toastr__WEBPACK_IMPORTED_MODULE_3___default.a.info("El ticket fue creado correctamente. Queres crear otro?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Ticket Creado", {
+          "closeButton": true,
+          "debug": true,
+          "newestOnTop": true,
+          "progressBar": true,
+          "positionClass": "toast-top-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": 30000,
+          "hideDuration": 1000,
+          "timeOut": 20000,
+          "extendedTimeOut": 1001,
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        });
       })["catch"](function (err) {
         return console.error(err);
       });
@@ -3380,6 +3437,10 @@ Vue.component('card-producto-ticket', __webpack_require__(/*! ./CardProductoTick
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! toastr */ "./node_modules/toastr/toastr.js");
+/* harmony import */ var toastr__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(toastr__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -3431,17 +3492,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
+ //por poner la nueva variable con todas las cosas de la bd
+
 Vue.component('card-producto-ticket', __webpack_require__(/*! ./CardProductoTicketComponent.vue */ "./resources/js/components/CardProductoTicketComponent.vue")["default"]);
 Vue.component('card-info-ticket', __webpack_require__(/*! ./CardInfoTicketComponent.vue */ "./resources/js/components/CardInfoTicketComponent.vue")["default"]);
 Vue.component('app-typography-icon', __webpack_require__(/*! ./AppTypographyIcon.vue */ "./resources/js/components/AppTypographyIcon.vue")["default"]);
 Vue.component('icon-ticks', __webpack_require__(/*! ./icons/ticks.vue */ "./resources/js/components/icons/ticks.vue")["default"]);
 Vue.component('icon-ticks-simple', __webpack_require__(/*! ./icons/ticks-simple.vue */ "./resources/js/components/icons/ticks-simple.vue")["default"]); //Vue.component('app-animated-icon', require('./AppAnimatedIcon.vue').default);
 
+moment__WEBPACK_IMPORTED_MODULE_1___default.a.lang('es');
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ticket-row",
   data: function data() {
     return {
       mens: "HOLA desde vue",
+      ticketshechos_de_bd: [],
       ticketshechos: [{
         id: 200,
         productos: [{
@@ -3515,12 +3585,182 @@ Vue.component('icon-ticks-simple', __webpack_require__(/*! ./icons/ticks-simple.
       }]
     };
   },
+  created: function created() {
+    this.fetchTicketsSinHacer();
+  },
   methods: {
+    since: function since(d) {
+      return moment__WEBPACK_IMPORTED_MODULE_1___default()(d).fromNow();
+    },
     speakMethod: function speakMethod(msg) {
       //alert(msg);
       this.$emit('se_termino_ticket', msg);
+    },
+    fetchTicketsSinHacer: function fetchTicketsSinHacer() {
+      var _this = this;
+
+      //toastr.info("Buscando Tickets en proceso");
+      toastr__WEBPACK_IMPORTED_MODULE_0___default.a["info"]("Buscando Tickets en proceso", "", {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": 20000,
+        "hideDuration": 1000,
+        "timeOut": 20000,
+        "extendedTimeOut": 1001,
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      });
+      axios.get('tickets_get_sin_hacer').then(function (res) {
+        console.log(res.data);
+        _this.ticketshechos_de_bd = res.data;
+      })["catch"](function (error) {
+        console.log(error);
+        _this.errored = true;
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error("Ocurrio un error: " + error);
+      })["finally"](function () {
+        return _this.loading = false;
+      });
+      console.log("los tickets:");
+      console.log(this.ticketshechos_de_bd);
+    },
+    cambio_estado_producto: function cambio_estado_producto(index_uno, index_ticket, prod_id, ticket_id, estado) {
+      var _this2 = this;
+
+      console.log("el prod id es" + index_uno);
+      console.log("el ticket id es" + index_ticket);
+      console.log(" \n\n\n ");
+      var id_prdo_en_tick = this.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_id;
+
+      if (estado == 1) {
+        this.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_color_prod_div = 'lime';
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.success("Producto: " + prod_id + " del ticket:" + ticket_id + " termianda");
+        console.log(" \n\n\n El prodticket es:");
+        console.log(id_prdo_en_tick);
+      }
+
+      if (estado == 2) {
+        this.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_color_prod_div = 'indigo';
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.info("Producto: " + prod_id + " del ticket:" + ticket_id + " esta en proceso ahora");
+      }
+
+      if (estado == 3) {
+        /*console.log("Antes:"+this.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_color_prod_div);
+        console.log("\n\n\n");*/
+        this.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_color_prod_div = 'orange';
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error("Producto: " + prod_id + " del ticket:" + ticket_id + " fue cancelado");
+      } //se marcara el estado en la bd tmb       
+
+
+      axios.post("actualizar_prodtick/".concat(id_prdo_en_tick, "/").concat(estado)).then(function (res) {
+        console.log("\n\n\n");
+        console.log("Resultado del update: \n");
+        console.log(res.data); //this.ticketshechos_de_bd = res.data;
+      })["catch"](function (error) {
+        console.log(error);
+        _this2.errored = true;
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.error("Ocurrio un error: " + error);
+      })["finally"](function () {
+        _this2.loading = false;
+        toastr__WEBPACK_IMPORTED_MODULE_0___default.a.info("Producto y actualizado: " + _this2.ticketshechos_de_bd[index_ticket].productos[index_uno].productostickets_id);
+      });
     }
   }
+  /*
+  
+  ticketshechos: [
+  		  {
+  			id: 200,
+  			productos:[
+  			{
+  				id: 222,
+  				nombre: "Empanada de carne",
+  				colordivproductos:'white',
+  				descripcion: "Son emepandasd de masa y con rellono de super carne",
+  				source: 'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/empanadas-arabes-1080x671.jpg'
+  			  },
+  			  {
+  				id: 247,
+  				nombre: "Lomos suecos",
+  				colordivproductos:'white',
+  				descripcion: "Es un super sanguche de pan con carne al medio y tomate y lechuga",
+  				source: 'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/empanadas-arabes-1080x671.jpg'
+  			  }
+  			],
+  			nombre: "eeee",
+  			colordiv:'white',
+  			colordivproductos:'white',
+  			descripcion: "Son emepandasd de masa y con rellono de super carne",
+  			source: 'https://www.laespanolaaceites.com/wp-content/uploads/2019/06/empanadas-arabes-1080x671.jpg'
+  		  },
+  				id: (...)
+  		idproducto: (...)
+  		idticket: (...)
+  		precio: (...)
+  		estado: (...)
+  		observacion: (...)
+  		created_at: (...)
+  		updated_at: (...)
+  		deleted_at: (...)
+  		cantidad: (...)
+  		quien_creo: (...)
+  		quien_actualizo: (...)
+  		unidadmedida: (...)
+  		tamanio: (...)
+  		aderezos: (...)
+  		stock: (...)
+  		nombre: (...)
+  		icono: (...)
+  		foto1: (...)
+  		foto2: (...)
+  		foto3: (...)
+  		foto4: (...)
+  		foto5: (...)
+  		foto6: (...)
+  		foto7: (...)
+  		foto8: (...)
+  		categoria_id: (...)
+  		categoria: (...)
+  		precio_total: (...)
+  		path_pdf: (...)
+  		cliente: (...)
+  		creado_por: (...)
+  		apellido: (...)
+  		telefono1: (...)
+  		telefono2: (...)
+  		telefono3: (...)
+  		telefono4: (...)
+  		direccion1: (...)
+  		ciudad1: (...)
+  		numerodireccion1: (...)
+  		orientacion1: (...)
+  		direccion2: (...)
+  		ciudad2: (...)
+  		numerodireccion2: (...)
+  		orientacion2: (...)
+  		direccion: (...)
+  		ciudad3: (...)
+  		numerodireccion3: (...)
+  		orientacion3: (...)
+  		dni: (...)
+  		cantidad_compras: (...)
+  		avatar: (...)
+  		cuit: (...)
+  		quien_modfico: (...)
+  		promos: (...)
+  		afavor: (...)
+  		deuda: (...)
+  		ultima_compra: (...)
+  		facebook: (...)
+  		instagram: (...)
+  	*/
+
 });
 
 /***/ }),
@@ -3682,7 +3922,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.btn-circle.btn-sm { \n    width: 30px; \n    height: 30px; \n    padding: 6px 0px; \n    border-radius: 15px; \n    font-size: 8px; \n    text-align: center;\n}\n.btn-circle.btn-md { \n    width: 50px; \n    height: 50px; \n    padding: 7px 10px; \n    border-radius: 25px; \n    font-size: 10px; \n    text-align: center;\n}\n.btn-circle.btn-xl { \n    width: 70px; \n    height: 70px; \n    padding: 10px 16px; \n    border-radius: 35px; \n    font-size: 12px; \n    text-align: center;\n} \n", ""]);
+exports.push([module.i, "\n.btn-circle.btn-sm { \n\twidth: 30px; \n\theight: 30px; \n\tpadding: 6px 0px; \n\tborder-radius: 15px; \n\tfont-size: 8px; \n\ttext-align: center;\n}\n.btn-circle.btn-md { \n\twidth: 50px; \n\theight: 50px; \n\tpadding: 7px 10px; \n\tborder-radius: 25px; \n\tfont-size: 10px; \n\ttext-align: center;\n}\n.btn-circle.btn-xl { \n\twidth: 70px; \n\theight: 70px; \n\tpadding: 10px 16px; \n\tborder-radius: 35px; \n\tfont-size: 12px; \n\ttext-align: center;\n} \n", ""]);
 
 // exports
 
@@ -61047,7 +61287,14 @@ var render = function() {
     "div",
     { staticClass: "row" },
     [
-      _c("crear-cliente"),
+      _c("crear-cliente", {
+        attrs: { id_cliente_padre: 785 },
+        on: {
+          secreounnuevocliente: function($event) {
+            return _vm.cambiocliente_desde_crear($event)
+          }
+        }
+      }),
       _vm._v(" "),
       _c(
         "div",
@@ -61421,7 +61668,11 @@ var render = function() {
               {
                 staticClass: "btn btn-primary btn-circle btn-md",
                 attrs: { type: "button" },
-                on: { click: _vm.enproceso_ticket }
+                on: {
+                  click: function($event) {
+                    return _vm.enproceso_ticket(_vm.id)
+                  }
+                }
               },
               [_c("icon-ticks-simple")],
               1
@@ -61432,7 +61683,11 @@ var render = function() {
               {
                 staticClass: "btn btn-danger btn-circle btn-md",
                 attrs: { type: "button" },
-                on: { click: _vm.cancelar_ticket }
+                on: {
+                  click: function($event) {
+                    return _vm.cancelar_ticket(_vm.id)
+                  }
+                }
               },
               [_vm._v("x")]
             ),
@@ -61442,14 +61697,20 @@ var render = function() {
               { staticClass: "card-subtitle mb-2 text-muted" },
               [
                 _c("font", { attrs: { color: "black" } }, [
-                  _vm._v("Cliente: Checcarelli")
+                  _vm._v(
+                    "Cliente: " + _vm._s(_vm.mensaje) + " - " + _vm._s(_vm.id)
+                  )
                 ])
               ],
               1
             ),
             _vm._v(" "),
             _c("p", { staticClass: "card-text" }, [
-              _vm._v(_vm._s(_vm.mensaje) + " -")
+              _vm._v(
+                _vm._s(_vm.mensaje) +
+                  " -  " +
+                  _vm._s(_vm.since(_vm.fechacreacion))
+              )
             ])
           ])
         ]
@@ -61530,17 +61791,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
+  return _c("div", { staticClass: "row" }, [
     _vm._m(0),
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "tab-content", attrs: { id: "pills-tabContent" } },
+      {
+        staticClass: "tab-content",
+        staticStyle: { width: "100%" },
+        attrs: { id: "pills-tabContent" }
+      },
       [
         _c(
           "div",
           {
             staticClass: "tab-pane fade show active",
+            staticStyle: { width: "100%" },
             attrs: {
               id: "pills-home",
               role: "tabpanel",
@@ -61613,7 +61879,7 @@ var render = function() {
       },
       [_vm._v("toastr")]
     ),
-    _vm._v("\n\t" + _vm._s(_vm.since("2020-03-16 11:38:35")) + "\n")
+    _vm._v("\n\t\t" + _vm._s(_vm.since("2020-03-16 11:38:35")) + "\n\t")
   ])
 }
 var staticRenderFns = [
@@ -61621,68 +61887,70 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "ul",
-      {
-        staticClass: "nav nav-pills mb-3",
-        attrs: { id: "pills-tab", role: "tablist" }
-      },
-      [
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link active",
-              attrs: {
-                id: "pills-home-tab",
-                "data-toggle": "pill",
-                href: "#pills-home",
-                role: "tab",
-                "aria-controls": "pills-home",
-                "aria-selected": "true"
-              }
-            },
-            [_vm._v("Sin hacer")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: {
-                id: "pills-profile-tab",
-                "data-toggle": "pill",
-                href: "#pills-profile",
-                role: "tab",
-                "aria-controls": "pills-profile",
-                "aria-selected": "false"
-              }
-            },
-            [_vm._v("Ya hechos")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: {
-                id: "pills-contact-tab",
-                "data-toggle": "pill",
-                href: "#pills-contact",
-                role: "tab",
-                "aria-controls": "pills-contact",
-                "aria-selected": "false"
-              }
-            },
-            [_vm._v("Cancelados")]
-          )
-        ])
-      ]
-    )
+    return _c("div", { staticClass: "container" }, [
+      _c(
+        "ul",
+        {
+          staticClass: "nav nav-pills mb-3",
+          attrs: { id: "pills-tab", role: "tablist" }
+        },
+        [
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link active",
+                attrs: {
+                  id: "pills-home-tab",
+                  "data-toggle": "pill",
+                  href: "#pills-home",
+                  role: "tab",
+                  "aria-controls": "pills-home",
+                  "aria-selected": "true"
+                }
+              },
+              [_vm._v("Sin hacer")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                attrs: {
+                  id: "pills-profile-tab",
+                  "data-toggle": "pill",
+                  href: "#pills-profile",
+                  role: "tab",
+                  "aria-controls": "pills-profile",
+                  "aria-selected": "false"
+                }
+              },
+              [_vm._v("Ya hechos")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                attrs: {
+                  id: "pills-contact-tab",
+                  "data-toggle": "pill",
+                  href: "#pills-contact",
+                  role: "tab",
+                  "aria-controls": "pills-contact",
+                  "aria-selected": "false"
+                }
+              },
+              [_vm._v("Cancelados")]
+            )
+          ])
+        ]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -63309,6 +63577,11 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-footer" }, [
+                  _vm._v(
+                    "\n\t\t\t\t\t\tel id:" +
+                      _vm._s(_vm.id_cliente_padre) +
+                      "\n\t\t\t\t\t\t"
+                  ),
                   _c(
                     "button",
                     {
@@ -64107,66 +64380,40 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container" },
+    { staticClass: "row" },
     [
-      _c(
-        "div",
-        { staticClass: "tab-content", attrs: { id: "pills-tabContent" } },
-        [
-          _c(
-            "div",
-            {
-              staticClass: "tab-pane fade show active",
-              attrs: {
-                id: "pills-home",
-                role: "tabpanel",
-                "aria-labelledby": "pills-home-tab"
-              }
-            },
-            _vm._l(_vm.ticketshechos, function(ticket, index) {
-              return _c("div", { key: _vm.id }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "row",
-                    style: { background: ticket.colordiv }
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "col-3",
-                        staticStyle: {
-                          "margin-left": "0px",
-                          "margin-right": "0px",
-                          "padding-left": "0px",
-                          "padding-right": "0px"
-                        }
-                      },
-                      [
-                        _c("card-info-ticket", {
-                          attrs: {
-                            mensaje: ticket.nombre,
-                            messa: ticket.source,
-                            colordeldiv: ticket.colordiv,
-                            id: ticket.id
-                          },
-                          on: {
-                            speak: function($event) {
-                              return _vm.speakMethod($event)
-                            }
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm._l(ticket.productos, function(prod, index) {
-                      return _c(
+      _c("div", { staticClass: "col-md-12" }, [
+        _c(
+          "div",
+          {
+            staticClass: "tab-content",
+            staticStyle: { width: "100%" },
+            attrs: { id: "pills-tabContent" }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass: "tab-pane fade show active",
+                attrs: {
+                  id: "pills-home",
+                  role: "tabpanel",
+                  "aria-labelledby": "pills-home-tab"
+                }
+              },
+              _vm._l(_vm.ticketshechos_de_bd, function(ticket, index_t) {
+                return _c("div", { key: ticket.ticket_id }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "row",
+                      style: { background: ticket.ticket_colordiv }
+                    },
+                    [
+                      _c(
                         "div",
                         {
-                          key: _vm.id,
-                          staticClass: "col-sm",
+                          staticClass: "col-3",
                           staticStyle: {
                             "margin-left": "0px",
                             "margin-right": "0px",
@@ -64175,101 +64422,194 @@ var render = function() {
                           }
                         },
                         [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "card text-white",
-                              style: { background: prod.colordivproductos }
+                          _c("card-info-ticket", {
+                            attrs: {
+                              mensaje:
+                                ticket.cliente_apellido +
+                                ", " +
+                                ticket.cliente_nombre,
+                              fechacreacion: ticket.ticket_created_at,
+                              messa: ticket.cliente_apellido,
+                              colordeldiv: ticket.ticket_colordiv,
+                              id: ticket.ticket_id
                             },
-                            [
-                              _c("img", {
-                                attrs: {
-                                  src: prod.source,
-                                  alt: "Card image",
-                                  width: "150px"
+                            on: {
+                              speak: function($event) {
+                                return _vm.speakMethod($event)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm._l(ticket.productos, function(prod, index) {
+                        return _c(
+                          "div",
+                          {
+                            key: prod.productos_id,
+                            staticClass: "col-sm",
+                            staticStyle: {
+                              "margin-left": "0px",
+                              "margin-right": "0px",
+                              "padding-left": "0px",
+                              "padding-right": "0px"
+                            }
+                          },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "card text-white",
+                                style: {
+                                  background:
+                                    prod.productostickets_color_prod_div
                                 }
-                              }),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "card-img-overlay" }, [
-                                _c("h5", { staticClass: "card-title" }, [
-                                  _vm._v(_vm._s(prod.nombre))
-                                ]),
+                              },
+                              [
+                                _c("img", {
+                                  attrs: {
+                                    src:
+                                      "http://localhost:8000/storage/" +
+                                      prod.productos_foto1,
+                                    alt: "Card image",
+                                    width: "70%",
+                                    height: "200px"
+                                  }
+                                }),
                                 _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "btn btn-success btn-circle btn-sm",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        prod.colordivproductos = "lime"
+                                _c("div", { staticClass: "card-img-overlay" }, [
+                                  _c("p", [
+                                    _vm._v(_vm._s(prod.productos_nombre))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-success btn-circle btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.cambio_estado_producto(
+                                            index,
+                                            index_t,
+                                            prod.productos_id,
+                                            ticket.ticket_id,
+                                            1
+                                          )
+                                        }
                                       }
-                                    }
-                                  },
-                                  [_c("icon-ticks-simple")],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "btn btn-primary btn-circle btn-sm",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        prod.colordivproductos = "indigo"
+                                    },
+                                    [_c("icon-ticks-simple")],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-primary btn-circle btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.cambio_estado_producto(
+                                            index,
+                                            index_t,
+                                            prod.productos_id,
+                                            ticket.ticket_id,
+                                            2
+                                          )
+                                        }
                                       }
-                                    }
-                                  },
-                                  [_c("icon-ticks-simple")],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "btn btn-danger btn-circle btn-sm",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        prod.colordivproductos = "orange"
+                                    },
+                                    [_c("icon-ticks-simple")],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-danger btn-circle btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.cambio_estado_producto(
+                                            index,
+                                            index_t,
+                                            prod.productos_id,
+                                            ticket.ticket_id,
+                                            3
+                                          )
+                                        }
                                       }
-                                    }
-                                  },
-                                  [_vm._v("x")]
-                                ),
-                                _vm._v(" "),
-                                _c("p", { staticClass: "card-text" }, [
-                                  _vm._v(_vm._s(prod.descripcion))
-                                ]),
-                                _vm._v(" "),
-                                _c("p", { staticClass: "card-text" }, [
-                                  _vm._v("Last updated 3 mins ago")
+                                    },
+                                    [_vm._v("x")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    { staticClass: "card-text" },
+                                    [
+                                      _c(
+                                        "font",
+                                        { attrs: { color: "black" } },
+                                        [
+                                          _vm._v(
+                                            " " + _vm._s(prod.productos_stock)
+                                          )
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    { staticClass: "card-text" },
+                                    [
+                                      _c(
+                                        "font",
+                                        { attrs: { color: "black" } },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm.since(
+                                                prod.productos_created_at
+                                              )
+                                            ) +
+                                              " " +
+                                              _vm._s(prod.productostickets_id)
+                                          )
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
                                 ])
-                              ])
-                            ]
-                          )
-                        ]
-                      )
-                    })
-                  ],
-                  2
-                ),
-                _vm._v(" "),
-                _c("hr")
-              ])
-            }),
-            0
-          )
-        ]
-      ),
+                              ]
+                            )
+                          ]
+                        )
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c("hr")
+                ])
+              }),
+              0
+            )
+          ]
+        )
+      ]),
       _vm._v(" "),
       _c("icon-ticks"),
       _vm._v(" "),
-      _c("icon-ticks-simple")
+      _c("icon-ticks-simple"),
+      _vm._v("\n\n\t" + _vm._s(_vm.ticketshechos_de_bd) + "\n\t")
     ],
     1
   )

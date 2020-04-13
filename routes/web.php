@@ -36,6 +36,10 @@ Route::name('print')->get('/imprimir', 'PruebaVueController@imprimir');
 Route::get('/tickets_crear', 'PruebaVueController@crear_ticket');
 Route::get('/tickets_ver', 'TicketsController@get');
 
+Route::get('/tickets_get_sin_hacer', 'TicketsController@get_ticket_en_progreso');
+
+
+
 
 //clientes
 
@@ -61,6 +65,10 @@ Route::post('login', 'UserController@authenticate');
 Route::group(['middleware' => ['jwt.verify']], function() {
        /*AÑADE AQUI LAS RUTAS QUE QUIERAS PROTEGER CON JWT*/
  });
+
+
+//productosenticket
+Route::post('actualizar_prodtick/{id}/{estado}', 'ProductosenticketController@update_axios');
 
 
 

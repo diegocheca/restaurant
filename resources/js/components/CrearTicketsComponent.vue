@@ -456,6 +456,23 @@
                 axios.post('api/ticket', ticketts_api)
                     .then((res) => {
                         console.log(res);
+                        toastr.info("El ticket fue creado correctamente. Queres crear otro?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Ticket Creado", {
+                          "closeButton": true,
+                          "debug": true,
+                          "newestOnTop": true,
+                          "progressBar": true,
+                          "positionClass": "toast-top-right",
+                          "preventDuplicates": false,
+                          "onclick": null,
+                          "showDuration": 30000,
+                          "hideDuration": 1000,
+                          "timeOut": 20000,
+                          "extendedTimeOut": 1001,
+                          "showEasing": "swing",
+                          "hideEasing": "linear",
+                          "showMethod": "fadeIn",
+                          "hideMethod": "fadeOut"
+                        });
                     })
                     .catch((err) => console.error(err));
             },

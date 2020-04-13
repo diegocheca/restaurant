@@ -20,7 +20,7 @@
 
    </head>
 <body>
-	<div class="container" id='app' style="margin-left:0px; margin-right:0px; width:100%">
+	<div id='app' style="margin-left:0px; margin-right:0px; width:100%">
 		<comanda></comanda>
 
 

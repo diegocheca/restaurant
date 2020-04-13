@@ -1,25 +1,25 @@
 <template>
-	<div class="container">
-		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-			<li class="nav-item">
-				<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Sin hacer</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Ya hechos</a>
-		  	</li>
-			<li class="nav-item">
-				<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelados</a>
-			</li>
-		</ul>
-		<div class="tab-content" id="pills-tabContent">
-			<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	<div class="row">
+    <div class="container">
+    		<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    			<li class="nav-item">
+    				<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Sin hacer</a>
+    			</li>
+    			<li class="nav-item">
+    				<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Ya hechos</a>
+    		  	</li>
+    			<li class="nav-item">
+    				<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Cancelados</a>
+    			</li>
+    		</ul>
+
+    </div>
+		<div class="tab-content" id="pills-tabContent" style="width:100%" >
+			<div class="tab-pane fade show active" style="width:100%" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 				<ticket-row v-on:se_termino_ticket="mensaje_termina_ticket($event)"></ticket-row>
 			</div>
 			<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 				<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-					<!--<div v-for="(ticket,index) in tickets" :key="id">
-						<h1>tickets ya hechos {{ticket.id}}</h1>
-					</div>-->
 					<ticket-yahechos></ticket-yahechos>
 				</div>
 			</div>
@@ -55,25 +55,7 @@
 		data() {
 			return {
 				  mens:"HOLA desde vue",
-				  tickets: [
-				  {
-				  	id: 1,
-				  	nombre: "dasd"
-				  },
-				  {
-				  	id: 2,
-				  	nombre: "dasd"
-				  },
-				  {
-				  	id: 3,
-				  	nombre: "dasd"
-				  },
-				  {
-				  	id: 4,
-				  	nombre: "dasd"
-				  }
-
-				  ]
+				  
 				};
 		},
 		methods: {
@@ -84,7 +66,8 @@
 				toastr.success("nuevo algo");
 			},
 			mensaje_termina_ticket: function(id){
-				toastr.success("Ticket: "+id+" terminado");
+				//toastr.success("Ticket: "+id+" terminado");
+        console.log("Ticket: "+id+" terminado");
 			}
 		}
 		

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ticket;
-use App\Productosenticket;
+use App\Productosenticket; 
 
 class TicketsController extends Controller
 {
@@ -89,6 +89,208 @@ class TicketsController extends Controller
 	{
 		return view('comanda.index_componente');
 	}
+
+	
+
+	public function get_ticket_en_progreso()
+	{
+		//
+		//$posts = Productosenticket::select('productosentickets.id', 'productosentickets.idproducto', 'productosentickets.idticket', 'productosentickets.precio', 'productosentickets.cantidad',
+		 //'productosentickets.unidadmedida', 'productosentickets.tamanio', 'productosentickets.aderezos')
+		/*$posts = Productosenticket::select('*')
+		->join('productos', 'productos.id', '=', 'productosentickets.idproducto')
+		->join('tickets', 'tickets.id', '=', 'productosentickets.idticket')
+		->join('clientes', 'tickets.cliente', '=', 'clientes.id')
+		->where('productosentickets.estado', 'en progreso')
+		->get();*/
+
+		//Primero voy a conseguir todos los tickets en proceso
+		$tickets_en_proceso = Ticket::select(
+			'tickets.id AS ticket_id' , 
+			'tickets.categoria AS ticket_categoria' , 
+			'tickets.estado AS ticket_estado' , 
+			'tickets.precio_total AS ticket_precio_total' , 
+			'tickets.path_pdf AS ticket_path_pdf' , 
+			'tickets.cliente AS ticket_cliente' , 
+			'tickets.creado_por AS ticket_creado_por' , 
+			'tickets.created_at AS ticket_created_at' , 
+			'tickets.updated_at AS ticket_updated_at' , 
+			'tickets.deleted_at AS ticket_deleted_at' ,
+			'tickets.colordivproductos AS ticket_colordivproductos',
+			'tickets.colordiv AS ticket_colordiv',
+
+			
+			
+
+
+			'clientes.id AS cliente_id',
+			'clientes.nombre AS cliente_nombre',
+			'clientes.apellido AS cliente_apellido',
+			'clientes.telefono1 AS cliente_telefono1',
+			'clientes.telefono2 AS cliente_telefono2',
+			'clientes.direccion1 AS cliente_direccion1',
+			'clientes.ciudad1 AS cliente_ciudad1',
+			'clientes.numerodireccion1 AS cliente_numerodireccion1',
+			'clientes.orientacion1 AS cliente_orientacion1',
+			'clientes.avatar AS cliente_avatar',
+		)
+
+		->join('clientes', 'tickets.cliente', '=', 'clientes.id')
+		->where('tickets.estado','LIKE', "%en progreso%")
+		//->where('tickets.id', 14)
+		->get();
+		//$temp = response()->json($posts);
+
+
+		// $tikets_recuperados = Ticket::find(14);
+		// $prodticket = $tikets_recuperados->Productosenticket;
+		// dd($prodticket);
+		//dd(response()->json($tickets_en_proceso));
+
+		//AHORA q tengo table tickets y cliente 
+		///voy a hacer un foreach a cada uno delos tickets_cliente contra los productostickets
+		//$lista_de_productos= array();
+		$indice = 0;
+
+		foreach ($tickets_en_proceso as $tickets_cliente) {
+			$temp = Productosenticket::select( 
+			'productosentickets.id AS productostickets_id' ,
+			'productosentickets.idproducto AS productostickets_idproducto' ,
+			'productosentickets.idticket AS productostickets_idticket' ,
+			'productosentickets.precio AS productostickets_precio' ,
+			'productosentickets.estado AS productostickets_estado' ,
+			'productosentickets.observacion AS productostickets_observacion' ,
+			'productosentickets.created_at AS productostickets_created_at' ,
+			'productosentickets.updated_at AS productostickets_updated_at' ,
+			'productosentickets.deleted_at AS productostickets_deleted_at' ,
+			'productosentickets.cantidad AS productostickets_cantidad' ,
+			'productosentickets.quien_creo AS productostickets_quien_creo' ,
+			'productosentickets.quien_actualizo AS productostickets_quien_actualizo' ,
+			'productosentickets.unidadmedida AS productostickets_unidadmedida' ,
+			'productosentickets.tamanio AS productostickets_tamanio' ,
+			'productosentickets.aderezos AS productostickets_aderezos' ,
+			'productosentickets.color_prod_div AS productostickets_color_prod_div' ,
+				
+
+			'productos.id AS productos_id' , 
+			'productos.precio AS productos_precio' , 
+			'productos.stock AS productos_stock' , 
+			'productos.nombre AS productos_nombre' , 
+			'productos.observacion AS productos_observacion' , 
+			'productos.icono AS productos_icono' , 
+			'productos.foto1 AS productos_foto1' , 
+			'productos.foto2 AS productos_foto2' , 
+			'productos.foto3 AS productos_foto3' , 
+			'productos.foto4 AS productos_foto4' , 
+			'productos.foto5 AS productos_foto5' , 
+			'productos.foto6 AS productos_foto6' , 
+			'productos.foto7 AS productos_foto7' , 
+			'productos.foto8 AS productos_foto8' , 
+			'productos.categoria_id AS productos_categoria_id' , 
+			'productos.created_at AS productos_created_at' , 
+			'productos.updated_at AS productos_updated_at' , 
+			'productos.deleted_at AS productos_deleted_at' ,
+			'productos.colordivproducto AS productos_colordivproducto' , 
+			)
+			->join('productos', 'productos.id', '=', 'productosentickets.idproducto')
+			->where('productosentickets.idticket', $tickets_cliente->ticket_id)
+			->get()->toArray();
+			$tickets_en_proceso[$indice]->productos = $temp;
+			//$lista_de_productos [$tickets_cliente->ticket_id] = $temp;
+			$indice++;
+		}
+
+
+		//dd($tickets_en_proceso);
+
+		/*foreach ($tickets_en_proceso as $tickets_cliente) {
+			echo "id".$tickets_cliente->ticket_id;
+			var_dump($tickets_cliente->productos);
+			echo "\n\n\n";
+
+		}
+
+
+		die();*/
+
+
+
+
+
+	/*	$posts = Ticket::select('productosentickets.*',
+			'tickets.id AS ticket_id' , 
+			'tickets.categoria AS ticket_categoria' , 
+			'tickets.estado AS ticket_estado' , 
+			'tickets.precio_total AS ticket_precio_total' , 
+			'tickets.path_pdf AS ticket_path_pdf' , 
+			'tickets.cliente AS ticket_cliente' , 
+			'tickets.creado_por AS ticket_creado_por' , 
+			'tickets.created_at AS ticket_created_at' , 
+			'tickets.updated_at AS ticket_updated_at' , 
+			'tickets.deleted_at AS ticket_deleted_at' , 
+
+			'productos.id AS productos_id' , 
+			'productos.precio AS productos_precio' , 
+			'productos.stock AS productos_stock' , 
+			'productos.nombre AS productos_nombre' , 
+			'productos.observacion AS productos_observacion' , 
+			'productos.icono AS productos_icono' , 
+			'productos.foto1 AS productos_foto1' , 
+			'productos.foto2 AS productos_foto2' , 
+			'productos.foto3 AS productos_foto3' , 
+			'productos.foto4 AS productos_foto4' , 
+			'productos.foto5 AS productos_foto5' , 
+			'productos.foto6 AS productos_foto6' , 
+			'productos.foto7 AS productos_foto7' , 
+			'productos.foto8 AS productos_foto8' , 
+			'productos.categoria_id AS productos_categoria_id' , 
+			'productos.created_at AS productos_created_at' , 
+			'productos.updated_at AS productos_updated_at' , 
+			'productos.deleted_at AS productos_deleted_at' ,
+
+			'clientes.id AS cliente_id',
+			'clientes.nombre AS cliente_nombre',
+			'clientes.apellido AS cliente_apellido',
+			'clientes.telefono1 AS cliente_telefono1',
+			'clientes.telefono2 AS cliente_telefono2',
+			'clientes.direccion1 AS cliente_direccion1',
+			'clientes.ciudad1 AS cliente_ciudad1',
+			'clientes.numerodireccion1 AS cliente_numerodireccion1',
+			'clientes.orientacion1 AS cliente_orientacion1',
+			'clientes.avatar AS cliente_avatar',
+		)
+
+		->join('productosentickets', 'tickets.id', '=', 'productosentickets.idticket')
+		->join('productos', 'productos.id', '=', 'productosentickets.idproducto')
+		->join('clientes', 'tickets.cliente', '=', 'clientes.id')
+		->where('tickets.id', 14)
+		->get();*/
+		//$temp = response()->json($posts);
+
+
+		// $tikets_recuperados = Ticket::find(14);
+		// $prodticket = $tikets_recuperados->Productosenticket;
+		// dd($prodticket);
+		return response()->json($tickets_en_proceso);
+
+
+
+		//->join('cliente', 'cliente.id', '=', 'categories.user_id')
+
+
+		
+		//::select('id','apellido','nombre','telefono1','direccion1','ciudad1','numerodireccion1','orientacion1','dni','cantidad_compras','avatar','afavor','deuda')->get();
+
+
+		//$data = User::select('users.nameUser', 'categories.nameCategory')
+		//        ->join('categories', 'users.idUser', '=', 'categories.user_id')
+		 //       ->get();
+
+		return response()->json($posts);
+	}
+
+
+
 
 	
 	public function iconos_ver()

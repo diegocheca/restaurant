@@ -12,20 +12,20 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      *
      * @return \Illuminate\Http\Response
      */
-    /*public function index()
-    {
-        //
-    }*/
+    // public function index()
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    /*public function create()
-    {
-        //
-    }*/
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -33,10 +33,10 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   /* public function store(Request $request)
-    {
-        //
-    }*/
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
 
     /**
      * Display the specified resource.
@@ -44,10 +44,10 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      * @param  \App\Productosenticket  $productosenticket
      * @return \Illuminate\Http\Response
      */
-    /*public function show(Productosenticket $productosenticket)
-    {
-        //
-    }*/
+    // public function show(Productosenticket $productosenticket)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -55,10 +55,10 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      * @param  \App\Productosenticket  $productosenticket
      * @return \Illuminate\Http\Response
      */
-    /*public function edit(Productosenticket $productosenticket)
-    {
-        //
-    }*/
+    // public function edit(Productosenticket $productosenticket)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -67,10 +67,35 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      * @param  \App\Productosenticket  $productosenticket
      * @return \Illuminate\Http\Response
      */
-    /*public function update(Request $request, Productosenticket $productosenticket)
+    public function update_axios($id, $estado)
     {
+
+        if( $estado == 1 )
+        {
+            Productosenticket::where('id',$id)->update([ 'estado' => "termino" , 'color_prod_div' => "lime"]);
+        }
+        if( $estado == 2 )
+        {
+            Productosenticket::where('id',$id)->update([ 'estado' => "cocinando" , 'color_prod_div' => "indigo"]);
+        }
+        if( $estado == 3 )
+        {
+            Productosenticket::where('id',$id)->update([ 'estado' => "cancelado" , 'color_prod_div' => "orange"]);
+        }
+
+
+
+
+            echo "listo";
+
+
+       /* var_dump($id);
+        var_dump($estado);*/
         //
-    }*/
+        // $productosenticket->update($request->all());
+
+      //  return response()->json($task, 200);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -78,8 +103,8 @@ class ProductosenticketController extends \TCG\Voyager\Http\Controllers\VoyagerB
      * @param  \App\Productosenticket  $productosenticket
      * @return \Illuminate\Http\Response
      */
-    /*public function destroy(Productosenticket $productosenticket)
-    {
-        //
-    }*/
+    // public function destroy(Productosenticket $productosenticket)
+    // {
+    //     //
+    // }
 }

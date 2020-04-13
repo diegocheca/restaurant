@@ -1,6 +1,6 @@
 <template>
    <div class="row">
-    <crear-cliente></crear-cliente>
+    <crear-cliente :id_cliente_padre="785" v-on:secreounnuevocliente="cambiocliente_desde_crear($event)" ></crear-cliente>
     <div class="col-6">
     
         <v-select  
@@ -136,6 +136,38 @@ name: "buscador-cliente",
                 });
                 this.mas_info= false;
             },
+            cambiocliente_desde_crear: function(cliente_nuevo_desde_hijo){
+              //alert("cambio el cliente");
+              //pushear el nuevo cliente a la lista de clientes existentes
+              //ListaDeClientes
+              //lista de elementos que tiene lista de clientes
+              //('id','apellido','nombre','telefono1','direccion1','ciudad1','numerodireccion1','orientacion1','dni','cantidad_compras','avatar','afavor','deuda')->get();
+              //cliente_nuevo_desde_hijo
+              var cliente_nuevo_reducido = {
+                'id' : cliente_nuevo_desde_hijo.id ,
+                'apellido' : cliente_nuevo_desde_hijo.apellido ,
+                'nombre' : cliente_nuevo_desde_hijo.nombre ,
+                'telefono1' : cliente_nuevo_desde_hijo.telefono1 ,
+                'direccion1' : cliente_nuevo_desde_hijo.direccion1 ,
+                'ciudad1' : cliente_nuevo_desde_hijo.ciudad1 ,
+                'numerodireccion1' : cliente_nuevo_desde_hijo.numerodireccion1 ,
+                'orientacion1' : cliente_nuevo_desde_hijo.orientacion1 ,
+                'dni' : cliente_nuevo_desde_hijo.dni ,
+                'cantidad_compras' : cliente_nuevo_desde_hijo.cantidad_compras ,
+                'avatar' : cliente_nuevo_desde_hijo.avatar ,
+                'afavor' : cliente_nuevo_desde_hijo.afavor ,
+                'deuda' : cliente_nuevo_desde_hijo.deuda ,
+              }
+              this.ListaDeClientes.push(cliente_nuevo_reducido);
+
+              //seleccionar el cliente agregado
+              this.cliente = cliente_nuevo_reducido ;
+
+              //llamo a la funcion del padre
+              this.$emit('cambio_cliente_emit',cliente_nuevo_desde_hijo.id);
+
+            },
+
 
         },
         

@@ -350,6 +350,7 @@
 							{{cliente_nuevo}}
 						</div>
 						<div class="modal-footer">
+							el id:{{id_cliente_padre}}
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 							<button type="button" class="btn btn-primary" v-on:click="enviar_datos">Crear</button>
 							<button @click="mostrar_mensaje('algo123')">toastr</button>
@@ -365,6 +366,9 @@
 
 		export default {
 		name: "crear-cliente",
+		props: {
+			id_cliente_padre: Number
+		},
 		data() {
 			return {
 				mostrar_direccion2: false,
@@ -443,6 +447,8 @@
 					.then((res) => {
 						console.log(res);
 						this.cliente_recien_creado = res.data;
+						toastr.info("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado");
+						this.enviar_datos_a_padre_cliente();
 					})
 					.catch((err) => console.error(err));
 			},
@@ -466,10 +472,6 @@
 
 				*/
 				toastr.info("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado");
-
-				this.$root('bv::hide::modal', this.exampleModalCenter);
-				
-
 				 /*toastr["info"]("El cliente se guardo correctamente. Desea agregarlo a este ticket?<br /><br /><button type=\"button\" class=\"btn clear\">Si</button>", "Cliente Guardado", {
 		            "closeButton": true,
 		            "debug": true,
@@ -487,6 +489,11 @@
 		            "showMethod": "fadeIn",
 		            "hideMethod": "fadeOut"
 		          });*/
+			},
+			enviar_datos_a_padre_cliente(){
+				//this.cliente_recien_creado
+				this.$emit('secreounnuevocliente',this.cliente_recien_creado);
+
 			}
 
 		}

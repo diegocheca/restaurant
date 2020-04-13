@@ -32,6 +32,12 @@ Route::delete('/cliente/borrar/{id}', 'TaskController@destroy');
 Route::get('/cliente/buscar', 'TaskController@show');
 
 
+//ROUTE'S PARA consumir desde vue - productosentckets//
+Route::get('/productosenticket', 'ProductosenticketController@index');
+Route::put('/productosenticket/{id}', 'ProductosenticketController@update');
+Route::post('productosenticket', 'ProductosenticketController@store');
+Route::delete('/productosenticket/borrar/{id}', 'ProductosenticketController@destroy');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
